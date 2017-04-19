@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "cross_validatelm<-function(df,linear_model,n_iter,sr)\n{\n  df <- as.data.frame(df)\n  library(\"rpart\")\n  #We will compare two models- predictor\n  mean_subset<-c();\n  mean_all<-c();\n  dep<-all.vars(terms(linear_model))[1]\n  indep<-list()\n  relation_all=as.formula(paste(dep,'.',sep=\"~\"))\n  i<-1\n  while(i<length(all.vars(terms(linear_model)))){\n    indep[[i]]<-all.vars(terms(linear_model))[i+1]\n    i<-i+1\n  }\n  b <- paste(indep, collapse =\"+\")\n  relation_subset<-as.formula(paste(dep,b,sep=\"~\"))\n  for(i in 1:n_iter){\n    sample <- sample.int(n = nrow(df), size = floor(sr*nrow(df)), replace = F)\n    train <- df[sample, ]\n    testing  <- df[-sample, ]\n    first.lm<-lm(relation_subset, data=train)\n    second.lm<-lm(relation_all, data=train)\n    pred1.lm<-predict(first.lm,newdata=testing)\n    pred2.lm<-predict(second.lm, newdata=testing)\n    mean1<-mean((as.numeric(pred1.lm)-testing[,dep])^2)\n    mean2<-mean((as.numeric(pred2.lm)-testing[,dep])^2)\n    mean_subset<-c(mean_subset,mean1)\n    mean_all<-c(mean_all,mean2)\n  }\n\n  return (data.frame(accuracy_subset=mean_subset,accuracy_all= mean_all))\n}\n",
+    "created" : 1492627985201.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2628362298",
+    "id" : "3BA2467A",
+    "lastKnownWriteTime" : 1492628021,
+    "last_content_update" : 1492628021230,
+    "path" : "C:/Users/dDev/Desktop/CVLinearModel/R/hello.R",
+    "project_path" : "R/hello.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
